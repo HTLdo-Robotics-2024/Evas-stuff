@@ -1,0 +1,124 @@
+#include <kipr/wombat.h>
+
+void turn_light_switch();
+
+int main()
+{
+    printf("You turn me on like a light switch\n");
+    enable_servos ();
+    set_servo_position(0, 1024);
+    set_servo_position(1, 2047);
+    msleep(2000);
+
+
+
+    turn_light_switch();
+
+
+    return 0;
+}
+
+
+void turn_light_switch() {
+    int isOnBlack = 0;
+
+
+
+    printf("driving to the first line\n");
+    mav(0, 1000);
+    mav(1, 1000);
+    do {
+        isOnBlack = (analog(1) > 3500);
+    }
+    while (!isOnBlack);
+    mav(0, 0);
+    mav(1, 0);
+    //msleep(2000);
+
+    printf("cross first line\n");
+    mav(0, 1000);
+    mav(1, 1000);
+    msleep(500);
+    mav(0, 0);
+    mav(1, 0);
+    //msleep(2000);
+
+
+    printf("driving to the second line\n");
+    mav(0, 1000);
+    mav(1, 1000);
+    do {
+        isOnBlack = (analog(1) > 3500);
+    }
+    while (!isOnBlack);
+    mav(0, 0);
+    mav(1, 0);
+    //msleep(2000);
+
+
+
+    printf("turning left");
+    mav(0, 1000);
+    mav(1, 0);
+    msleep(2000);
+    mav(0, 0);
+    mav(1, 0);
+
+
+    printf("driving backwards as to not crash");
+    mav(0, -1000);
+    mav(1, -1000);
+    msleep(1500);
+
+
+
+
+    printf("approaching light switch");
+    set_servo_position(0, 1950);
+    set_servo_position(1, 2047);
+    msleep(500);
+    int dis = 0;
+
+    do {
+        mav(0, 1000);
+        mav(1, 1000);
+        dis = analog(0);
+        printf("%d\n", dis);
+    } while(dis <= 1410);
+    mav(0, 0);
+    mav(1, 0);
+    msleep(500);
+
+    
+    printf("flipping switch");
+
+    for (int pos = 1950; pos >= 1400; pos--) {
+        printf("%d\n", pos);
+        set_servo_position(0, pos);
+        msleep(1);
+    }
+    set_servo_position(1, 2047);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
